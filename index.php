@@ -12,16 +12,18 @@ require_once("rpcclient.php");
     <title>A Simple GINcoin Income Calculator</title>
 </head>
 <body>
-    <h1>A Simple GINcoin Income Calculator</h1>
-    <h3>A GINcoin income calculator made by @Tiamo#1675 on GINcoin Discord, written in PHP.</h3>
+    <h1>A Simple <a href="https://gincoin.io/">GINcoin</a> Income Calculator</h1>
+    <h3>A <a href="https://gincoin.io/">GINcoin</a> income calculator made by @Tiamo#1675 on GINcoin Discord, written in PHP.</h3>
     
     <p>Insert your hashrate, and amount of masternodes owned and click "submit"; the program will output an estimated amount of daily coins earned.
     Decimal values are supported, for example if you own 25% of a shared Masternode, input 0.25 under "Amount of Masternodes".
     Both fields are optional.</p>
     
-    <p>Difficulty is estimated from the last 30 blocks (1 hour) and is gotten from the official GINcoin explorer.</p>
+    <p>Difficulty is estimated from the last 30 blocks (1 hour) and is gotten from the official <a href="https://explorer.gincoin.io/">GINcoin explorer</a>.</p>
     
     <p>The <a href="https://github.com/iTiamo/GINcoin-Income-Calculator">source code is available on Github</a>.</p>
+    
+    <p><a href="https://gincoin.io/">Find out more about GINcoin</a></p>
     
     <form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>">
     <p>Hashrate (MH/s):
