@@ -17,7 +17,7 @@ use JsonRPC as RPC;
 
 class rpcclient
 {  
-    function __construct($rpcuser, $rpcpassword, $url, $port) {
+    function __construct($rpcuser, $rpcpassword, $url, $port) { //url or ip address
         $this->gincoin_client = new RPC\Client("http://".$rpcuser.":".$rpcpassword."@".$url.":".$port);
     }
     

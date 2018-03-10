@@ -21,7 +21,7 @@ require_once("rpcclient.php");
     
     <p>Difficulty is estimated from the last 30 blocks (1 hour) and is gotten from the official GINcoin explorer.</p>
     
-    <p>The source code is available here on Github.</p>
+    <p>The <a href="https://github.com/iTiamo/GINcoin-Income-Calculator">source code is available on Github</a>.</p>
     
     <form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>">
     <p>Hashrate (MH/s):
@@ -45,7 +45,7 @@ require_once("rpcclient.php");
             }
 
             $explorer = new explorer();
-            $rpcclient = new rpcclient("tiamo", "cGhZdq6dseCNjcx3z0lv", "127.0.0.1", "10111");
+            $rpcclient = new rpcclient("user", "password", "ipaddress", "port");
             $calculator = new calculator();
             
             $blockHeight = $explorer->getBlockHeight(); //get current blockheight
