@@ -47,7 +47,7 @@ require_once("rpcclient.php");
             }
 
             $explorer = new explorer();
-            $rpcclient = new rpcclient("user", "password", "ipaddress", "port");
+            $rpcclient = new rpcclient(user, password, url, port);
             $calculator = new calculator();
             
             $blockHeight = $explorer->getBlockHeight(); //get current blockheight
@@ -69,5 +69,10 @@ require_once("rpcclient.php");
             echo "<p>You will make a total of $totalCoins GIN per day.</p>";
         }
     ?>
+    
+    <p>Tipjar (GIN): GXUQQXBr5i2gKcPaa5SJHqQ9M9G9SgL1X1</p>
+    
+    <p>Generic Formula for calculating Proof-of-Work coins: coins_day=(seconds_day/(d*2^32/hashrate))*block_reward, where 2^32 is the average number of shares needed to find a block at a difficulty of 1</p>
+    <p>Generic Formula for calculating Masternode coins: coins_day=(((seconds_day/block_time)*block_rewards)/masternode_count)</p>
 </body>
 </html>
