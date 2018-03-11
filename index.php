@@ -46,33 +46,38 @@ require_once("rpcclient.php");
                 $masternode_multiplier = 0;
             }
 
-            $explorer = new explorer();
+            //$explorer = new explorer();
             $rpcclient = new rpcclient(user, password, url, port);
             $calculator = new calculator();
             
-            $blockHeight = $explorer->getBlockHeight(); //get current blockheight
-            for ($i = $blockHeight; $i > $blockHeight - 30; $i--) { //get the difficulties of the current block, and the previous 29 blocks
-                $block = $explorer->getBlock($explorer->getBlockHash($i));
-                $difficulty = $explorer->getDifficulty($block);
-                $difficulties[$i] = $difficulty;
-            }
-            $avg_difficulty = $calculator->averageArray($difficulties); //take the average of the current block, and the previous 29 blocks
+/*          OLD WAY OF CALCULATING COINS/DAY, SLOW AND LOTS OF CALLS TO GINCOIN BLOCK EXPLORER
+ *          $blockHeight = $explorer->getBlockHeight(); //get current blockheight
+ *          for ($i = $blockHeight; $i > $blockHeight - 30; $i--) { //get the difficulties of the current block, and the previous 29 blocks
+ *              $block = $explorer->getBlock($explorer->getBlockHash($i));
+ *              $difficulty = $explorer->getDifficulty($block);
+ *              $difficulties[$i] = $difficulty;
+ *          }
+ *          $avg_difficulty = $calculator->averageArray($difficulties); //take the average of the current block, and the previous 29 blocks */
             
+            $difficulty = $rpcclient->getDifficulty();
+            //NEW WAY TO CALCULATE COINS/DAY WITH GINCOIND getnetworkhashps
+            $networkHashPs = $rpcclient->getNetworkHashPs(30);            
             $masternode_count = $rpcclient->getMasternodeCount();
             
-            $pow_coins = $calculator->calculatePoWCoins($hashrate, $avg_difficulty);
+            $pow_coins = $calculator->calculatePoWCoinsByNetworkHashPs($hashrate, $networkHashPs);
             $masternode_coins = $calculator->calculateMasternodeCoins($masternode_multiplier, $masternode_count);
             $totalCoins = $pow_coins + $masternode_coins;
 
-            echo "<p>You will make an average of $pow_coins GIN per day by Proof of Work. The current difficulty is $difficulty, the average difficulty over the past hour was $avg_difficulty.</p>";
+            echo "<p>You will make an average of $pow_coins GIN per day by Proof of Work. The current difficulty is $difficulty.</p>";
             echo "<p>You will make an average of $masternode_coins GIN per day by Masternodes. The current amount of Masternodes is $masternode_count.</p>";
             echo "<p>You will make a total of $totalCoins GIN per day.</p>";
         }
     ?>
     
-    <p>Tipjar (GIN): GXUQQXBr5i2gKcPaa5SJHqQ9M9G9SgL1X1</p>
+    <p>Generic formula for calculating Proof-of-Work coins by difficulty: coins_day=(seconds_day/(d*2^32/hashrate))*block_reward, where 2^32 is the average number of shares needed to find a block at a difficulty of 1</p>
+    <p>Generic formula for calculating Proof-of-Work coins by nethash: coins_day=(hashrate/nethash)*((seconds_day/block_time)*block_reward)
+    <p>Generic formula for calculating Masternode coins: coins_day=(((seconds_day/block_time)*block_rewards)/masternode_count)</p>
     
-    <p>Generic Formula for calculating Proof-of-Work coins: coins_day=(seconds_day/(d*2^32/hashrate))*block_reward, where 2^32 is the average number of shares needed to find a block at a difficulty of 1</p>
-    <p>Generic Formula for calculating Masternode coins: coins_day=(((seconds_day/block_time)*block_rewards)/masternode_count)</p>
+    <p>Tipjar (GIN): GXUQQXBr5i2gKcPaa5SJHqQ9M9G9SgL1X1</p>
 </body>
 </html>

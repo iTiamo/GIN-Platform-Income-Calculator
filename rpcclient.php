@@ -24,5 +24,13 @@ class rpcclient
     function getMasternodeCount() {
         return $this->gincoin_client->masternode("count");
     }
+    
+    function getNetworkHashPs($blocks) {
+        return $this->gincoin_client->getnetworkhashps($blocks);
+    }
+    
+    function getDifficulty() {
+        return $this->gincoin_client->getdifficulty();
+    }
 }
 ?>
