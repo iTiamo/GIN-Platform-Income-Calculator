@@ -15,22 +15,69 @@ use JsonRPC as RPC;
  * https://en.bitcoin.it/wiki/Bitcoind
 */
 
-class rpcclient
+class coin //class to communicate with a coin's daemon 
 {  
-    function __construct($rpcuser, $rpcpassword, $url, $port) { //url or ip address
-        $this->gincoin_client = new RPC\Client("http://".$rpcuser.":".$rpcpassword."@".$url.":".$port);
+    private $client;
+    public $blocktime;
+    public $powReward;
+    public $mnReward;
+    
+    function __construct($rpcuser, $rpcpassword, $ip, $port) { //url or ip address
+        $this->client = new RPC\Client("http://".$rpcuser.":".$rpcpassword."@".$ip.":".$port);
+        $this->blocktime = $this->getBlockTime();
+        $this->mnReward = $this->getMNReward();
+        $this->powReward = $this->getPoWReward();
     }
     
     function getMasternodeCount() {
-        return $this->gincoin_client->masternode("count");
+        return $this->client->masternode("count", "enabled");
     }
     
-    function getNetworkHashPs($blocks) {
-        return $this->gincoin_client->getnetworkhashps($blocks);
+    function getNetworkHashPs($blocks) { //returns the network's hashrate over the past n blocks
+        return $this->client->getnetworkhashps($blocks);
     }
     
     function getDifficulty() {
-        return $this->gincoin_client->getdifficulty();
+        return $this->client->getdifficulty();
+    }
+    
+    function getBlock($hash) {
+        return $this->client->getblock($hash);
+    }
+    
+    function getBestBlock() {
+        return $this->client->getblock($this->client->getbestblockhash());
+    }
+    
+    function getBlockCount() { //returns the latest block index
+        return $this->client->getblockcount();
+    }
+    
+    function getBlockHash($index) {
+        return $this->client->getblockhash($index);
+    }
+    
+    function getRawTransaction($hash) {
+        return $this->client->getrawtransaction($hash, 1);
+    }
+    
+    private function getBlockTime() {
+        $bestblock = $this->getBestBlock();
+        $block2 = $this->getblock($this->getBlockHash($this->getBlockCount() - 100));
+        $timedelta = $bestblock["mediantime"] - $block2["mediantime"]; //the time in seconds that has passed between the best block and the block 100 blocks before the best block
+        return $timedelta / 101; //returns the average blocktime over the past 101 blocks
+    }
+    
+    private function getMNReward() {
+        $bestblock = $this->getBestBlock();
+        $coinbase = $this->getRawTransaction($bestblock["tx"][0]); //coinbase transaction of the best block
+        return $coinbase["vout"][0]["value"]; //the 1st output in a coinbase transaction is always the MN reward, here we return the value of that output
+    }
+    
+    private function getPoWReward() {
+        $bestblock = $this->getBestBlock();
+        $coinbase = $this->getRawTransaction($bestblock["tx"][0]); //coinbase transaction of the best block
+        return $coinbase["vout"][1]["value"]; //the 2nd output in a coinbase transaction is always the PoW reward, here we return the value of that output
     }
 }
 ?>
