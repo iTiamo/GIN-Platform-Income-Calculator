@@ -7,10 +7,10 @@ class ticker //class to interact with CryptoBridge ticker API
     function __construct() {
         $this->coins = json_decode(file_get_contents($this->tickerurl));
     }
-
-    function getGIN() {
-        for($i = 0; $i <= count($this->coins); $i++) {
-            if($this->coins[$i]->id == "GIN_BTC") {
+    
+    function getCoin($id) {
+        for($i = 0; $i < count($this->coins); $i++) {
+            if($this->coins[$i]->id == $id . "_BTC") {
                 return $this->coins[$i];
             }
         }

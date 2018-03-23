@@ -18,11 +18,13 @@ use JsonRPC as RPC;
 class coin //class to communicate with a coin's daemon 
 {  
     private $client;
+    public $coinid;
     public $blocktime;
     public $powReward;
     public $mnReward;
     
-    function __construct($rpcuser, $rpcpassword, $ip, $port) { //url or ip address
+    function __construct($coinid, $rpcuser, $rpcpassword, $ip, $port) { //url or ip address
+        $this->coinid = $coinid;
         $this->client = new RPC\Client("http://".$rpcuser.":".$rpcpassword."@".$ip.":".$port);
         $this->blocktime = $this->getBlockTime();
         $this->mnReward = $this->getMNReward();
