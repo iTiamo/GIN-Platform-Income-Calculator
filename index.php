@@ -29,9 +29,9 @@ require_once("ticker.php");
         <p>Select a coin:
             <select name="coin">
                 <option selected disabled hidden>Select a coin</option>
-                <option>GIN</option>
-                <option>LUCKY</option>
-                <option>PROTON</option>
+                <option <?php if(!empty($_GET["coin"])) { if($_GET["coin"] == "GIN") { echo "selected"; }}?>>GIN</option>
+                <option <?php if(!empty($_GET["coin"])) { if($_GET["coin"] == "LUCKY") { echo "selected"; }}?>>LUCKY</option>
+                <option <?php if(!empty($_GET["coin"])) { if($_GET["coin"] == "PROTON") { echo "selected"; }}?>>PROTON</option>
             </select>
         </p>
         <p>Hashrate (MH/s):
@@ -42,7 +42,7 @@ require_once("ticker.php");
     </form>
     
     <?php
-        if ($_GET) 
+        if (!empty($_GET) && !empty($_GET["coin"])) 
         {
             if ($_GET["hashrate"]) {
                 $hashrate = $_GET["hashrate"] * 1000000;
@@ -79,10 +79,10 @@ require_once("ticker.php");
             $totalCoins = round(($pow_coins + $masternode_coins), 2);
             
             $ticker = new ticker();
-            if($ticker->getCoin($coin->coinid)) {
-                $price = $ticker->getCoin($coin->coinid)->last;
+            if($ticker->getCryptoBridgeCoin($coin->coinid)) {
+                $price = $ticker->getCryptoBridgeCoin($coin->coinid)->last;
             } else {
-                $price = 0;
+                $price = $ticker->getGraviexCoin($coin->coinid)->ticker->last;
             }
             
             $pow_coins_worth = round(($pow_coins * $price), 8);
