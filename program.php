@@ -1,8 +1,8 @@
 <?php
 
-require_once("calculator.php");
-require_once("coin.php");
-require_once("ticker.php");
+require_once "calculator.php";
+require_once "coin.php";
+require_once "ticker.php";
 
 function program() {
     if ($_GET["hashrate"]) {

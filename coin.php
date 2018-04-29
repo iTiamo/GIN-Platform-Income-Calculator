@@ -1,10 +1,8 @@
 <?php
-require_once("../gincoin/RPC/Client.php");
-require_once("../gincoin/RPC/HttpClient.php");
-require_once("../gincoin/RPC/RequestBuilder.php");
-require_once("../gincoin/RPC/ResponseParser.php");
-require_once("../gincoin/RPC/JsonFormatValidator.php");
-use JsonRPC as RPC;
+
+require_once 'vendor/autoload.php';
+use JsonRPC\Client;
+
 //credit to fguillot for JsonRPC, find it here: https://github.com/fguillot/JsonRPC
 
 /*
@@ -25,7 +23,7 @@ class coin //class to communicate with a coin's daemon
     
     function __construct($coinid, $rpcuser, $rpcpassword, $ip, $port) { //url or ip address
         $this->coinid = $coinid;
-        $this->client = new RPC\Client("http://".$rpcuser.":".$rpcpassword."@".$ip.":".$port);
+        $this->client = new Client("http://".$rpcuser.":".$rpcpassword."@".$ip.":".$port);
         $this->blocktime = $this->getBlockTime();
         $this->mnReward = $this->getMNReward();
         $this->powReward = $this->getPoWReward();
