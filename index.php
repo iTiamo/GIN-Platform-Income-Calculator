@@ -35,9 +35,31 @@
     </form>
     
     <?php   
-        if (!empty($_GET) && !empty($_GET["coin"])) { 
-            require_once("program.php");
-            program(); 
+        if (!empty($_GET) && !empty($_GET["coin"])) {
+            require_once("src/coin.php");
+            require_once("src/income.php");
+            require_once("src/networkStats.php");
+
+            $coinTicker = $_GET["coin"];
+            $coin = getCoin($coinTicker);
+
+            $income = calculateIncome($coin, array(
+                "hashrate" => $_GET["hashrate"],
+                "masternodes" => $_GET["masternodes"]
+            ));
+
+            $networkStats = getNetworkStats($coin);
+
+            $totalCoins = number_format($income["proof-of-work"][$coinTicker] + $income["masternode-rewards"][$coinTicker], 8);
+            $totalCoinsWorth = number_format($income["proof-of-work"]["BTC"] + $income["masternode-rewards"]["BTC"], 8);
+
+            echo "<p>You will make an average of <b>{$income["proof-of-work"][$coinTicker]} {$coinTicker}</b> per day by Proof of Work, equal to <b>{$income["proof-of-work"]["BTC"]} BTC</b>.<br>";
+            echo "You will make an average of <b>{$income["masternode-rewards"][$coinTicker]} {$coinTicker}</b> per day by Masternodes, equal to <b>{$income["masternode-rewards"]["BTC"]} BTC</b>.<br>";
+            echo "You will make a total of <b>$totalCoins $coinTicker</b> per day, equal to <b>$totalCoinsWorth BTC</b>.</p>";
+
+            echo "<p>The average network hashrate is <b>" . round($networkStats["network-hashrate"]/1000000000, 3) . " GHs</b>.<br>";
+            echo "The average blocktime is <b>" . round($coin->blocktime) . " seconds</b>.<br>";
+            echo "The current amount of Masternodes is <b>{$networkStats["masternodes"]}</b>.</p>";
         } 
     ?>
     

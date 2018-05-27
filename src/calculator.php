@@ -1,5 +1,4 @@
 <?php
-
 class calculator
 {   
     function calculatePoWCoinsByDifficulty($hashrate, $difficulty, $blockreward, $timeperiod=86400) {
@@ -22,5 +21,4 @@ class calculator
         return $multiplier * ((($timeperiod/$blocktime)*$blockreward)/$masternode_count); //based off my generic formula for one masternode coins_day = (((seconds_day/block_time)*block_rewards)/masternode_count)
     }
 }
-
 ?>

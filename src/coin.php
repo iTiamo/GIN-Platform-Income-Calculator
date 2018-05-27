@@ -1,8 +1,6 @@
 <?php
-
-require_once 'vendor/autoload.php';
+require_once '../vendor/autoload.php';
 use JsonRPC\Client;
-
 //credit to fguillot for JsonRPC, find it here: https://github.com/fguillot/JsonRPC
 
 /*
@@ -78,6 +76,19 @@ class coin //class to communicate with a coin's daemon
         $bestblock = $this->getBestBlock();
         $coinbase = $this->getRawTransaction($bestblock["tx"][0]); //coinbase transaction of the best block
         return $coinbase["vout"][1]["value"]; //the 2nd output in a coinbase transaction is always the PoW reward, here we return the value of that output
+    }
+}
+
+function getCoin($coinTicker) {
+    switch($coinTicker) { //gets the coin and instantiates a class to interact with the coin's daemon
+        case "GIN":
+            return new coin("GIN", "gincoin", "gincoin", "127.0.0.1", "10112"); 
+
+        case "LUCKY":
+            return new coin("LUCKY", "luckybit", "luckybit", "127.0.0.1", "10113");
+
+        case "PROTON":
+            return new coin("PROTON", "protoncoin", "protoncoin", "127.0.0.1", "10114");
     }
 }
 ?>

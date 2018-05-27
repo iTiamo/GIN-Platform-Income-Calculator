@@ -1,6 +1,5 @@
 <?php
-
-class ticker //class to interact with CryptoBridge ticker API
+class ticker //class to interact with exchange API
 {
     private $cryptobridge = "https://api.crypto-bridge.org/api/v1/ticker";
     private $graviex = "https://graviex.net/api/v2/tickers/";
@@ -29,5 +28,4 @@ class ticker //class to interact with CryptoBridge ticker API
         return json_decode(file_get_contents(($this->graviex . strtolower($id) . "btc.json"), false, stream_context_create($arrContextOptions)));
     }
 }
-
 ?>
