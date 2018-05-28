@@ -8,5 +8,6 @@ $income = calculateIncome($coin, array(
     "masternodes" => $_GET["masternodes"]
 ));
 
+header('Content-Type: application/json');
 echo json_encode($income);
 ?>
